@@ -1,0 +1,141 @@
+Sub Main()
+    Dim ws As Worksheet
+
+    For Each ws In ThisWorkbook.Sheets
+        With ws
+            ' 헤더 스타일 설정
+            ApplyHeaderStyle .Range("A1:D1")
+            ApplySubHeaderStyle .Range("A2:D2")
+
+            ' 데이터 영역 스타일 설정
+            ApplyDataStyle .Range("A3:D52")
+
+            ' 열 너비 자동 조정 및 특정 열 너비 설정
+            ApplyColumnWidth .Columns("B:D")
+
+            ' 각 열의 너비와 형식 조정
+            .Columns("A").ColumnWidth = 8
+            .Columns("B").ColumnWidth = 65
+            .Columns("C").ColumnWidth = 45
+            .Columns("D").ColumnWidth = 8
+            .Columns("D").NumberFormat = "0%"
+
+            ' 기타 스타일 설정
+            ApplyOtherStyles .Range("A3:D52")
+
+            ' B열의 자동 줄바꿈 설정
+            .Columns("B").WrapText = True
+
+            ' C열의 텍스트 줄바꿈 및 행의 높이 자동 조절
+            WrapTextAndAutoFit .Columns("C")
+
+            ' D열의 퍼센트 값을 수식으로 변환
+            ConvertPercentageFormula .Columns("D")
+ 
+            ' A1:D1 병합
+            MergeCells .Range("A1:D1")
+
+       End With
+    Next ws
+End Sub
+
+
+Sub ApplyHeaderStyle(rng As Range)
+    With rng.Font
+        .Name = "맑은 고딕"
+        .Size = 18
+        .Bold = True
+        .Color = RGB(0, 0, 0) ' 검은색 글자
+    End With
+
+    With rng
+        .HorizontalAlignment = xlCenter
+        .VerticalAlignment = xlCenter
+        .RowHeight = 42 ' A1:D1의 높이를 42으로 설정
+        .Interior.ThemeColor = xlThemeColorAccent3 
+        .Interior.TintAndShade = 0.399975585192419 
+        .Interior.Pattern = xlSolid
+    End With
+
+
+End Sub
+
+Sub ApplySubHeaderStyle(rng As Range)
+    With rng.Font
+        .Name = "맑은 고딕"
+        .Size = 16
+        .Bold = True
+        .Color = RGB(0, 0, 0) ' 검은색 글자
+    End With
+
+    With rng
+        .HorizontalAlignment = xlCenter
+        .VerticalAlignment = xlCenter
+        .MergeCells = False ' A2:D2는 셀 병합 안 함
+        .RowHeight = 40 ' A2:D2의 높이를 40으로 설정
+        .Interior.ThemeColor = xlThemeColorAccent3
+        .Interior.TintAndShade = 0.799981688894314 
+        .Interior.Pattern = xlSolid
+    End With
+End Sub
+
+Sub ApplyDataStyle(rng As Range)
+    With rng.Font
+        .Name = "맑은 고딕"
+        .Size = 14
+    End With
+
+    ' B열의 자동 줄바꿈 설정
+    rng.Columns("B").WrapText = True
+
+    rng.Rows.WrapText = False
+    rng.Columns("C:D").NumberFormatLocal = IIf(rng.Rows.Count = 50, "#,##0_ ", "General")
+End Sub
+
+Sub ConvertPercentageFormula(rng As Range)
+    Dim cell As Range
+    For Each cell In rng
+        ' 퍼센트 값을 수식으로 변환
+        cell.Formula = cell.Value
+        cell.NumberFormat = "0%"
+    Next cell
+End Sub
+
+
+Sub ApplyColumnWidth(rng As Range)
+    rng.EntireColumn.AutoFit
+    rng.Columns("D").ColumnWidth = 13.78
+End Sub
+
+Sub ApplyOtherStyles(rng As Range)
+    With rng
+        .HorizontalAlignment = xlLeft
+        .VerticalAlignment = xlCenter
+        .WrapText = False
+        .Orientation = 0
+        .AddIndent = False
+        .IndentLevel = 0
+        .ShrinkToFit = False
+        .ReadingOrder = xlContext
+    End With
+End Sub
+
+Sub WrapTextAndAutoFit(rng As Range)
+    Dim lastRow As Long
+    Dim cell As Range
+    ' C열의 마지막 행을 찾기
+    lastRow = rng.Parent.Cells(rng.Parent.Rows.Count, "C").End(xlUp).Row
+
+    ' C열의 각 셀에 대해 처리
+    For Each cell In rng.Parent.Range("C1:C" & lastRow)
+        ' 셀의 텍스트를 줄바꿈하여 셀의 높이를 조절
+        cell.WrapText = True
+    Next cell
+
+    ' 각 행의 높이를 자동으로 조절
+    rng.Parent.Rows.AutoFit
+End Sub
+
+Sub MergeCells(rng As Range)
+    rng.Merge
+End Sub
