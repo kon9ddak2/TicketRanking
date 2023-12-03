@@ -19,9 +19,9 @@
   End단계에서 VBA실행하도록 함)
 
 [Config파일]
-URL : http://ticket.yes24.com/New/Rank/Ranking.aspx (예스24티켓 랭킹페이지 주소)
-ResultFolderPath : Data/Output (작업결과파일_폴더경로)
-FileName: 티켓랭킹_{0}.xlsx (결과파일명)
+- URL : http://ticket.yes24.com/New/Rank/Ranking.aspx (예스24티켓 랭킹페이지 주소)
+- ResultFolderPath : Data/Output (작업결과파일_폴더경로)
+- FileName: 티켓랭킹_{0}.xlsx (결과파일명)
 
 ### REFrameWork Template ###
 **Robotic Enterprise Framework**
